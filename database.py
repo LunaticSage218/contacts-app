@@ -1,15 +1,22 @@
 import sqlite3
 import os
+from models import Contact
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DB_NAME = os.path.join(BASE_DIR, "contacts.db")
+class ContactRepository:
 
+    def __init__(self):
+        base_dir = os.path.dirname(os.path.abspath(__file__))
+        self.db_path = os.path.join(base_dir, "contacts.db")
+        self._init_db()
 
-def init_db():
-    conn = sqlite3.connect(DB_NAME)
-    cursor = conn.cursor()
+    def _connect(self):
+        return sqlite3.connect(self.db_path)
 
-    cursor.execute("""
+    def _init_db(self):
+        conn = self._connect()
+        cursor = conn.cursor()
+
+        cursor.execute("""
             CREATE TABLE IF NOT EXISTS contacts (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
                 name TEXT NOT NULL,
@@ -17,48 +24,49 @@ def init_db():
                 address TEXT NOT NULL
             )
         """)
-    
-    conn.commit()
-    conn.close()
 
-def get_all_contacts():
-    conn = sqlite3.connect(DB_NAME)
-    cursor = conn.cursor()
+        conn.commit()
+        conn.close()
 
-    cursor.execute("SELECT * FROM contacts")
-    rows = cursor.fetchall()
+    def get_all(self):
+        conn = self._connect()
+        cursor = conn.cursor()
 
-    conn.close()
-    return rows
+        cursor.execute("SELECT * FROM contacts")
+        rows = cursor.fetchall()
 
-def add_contact(name, phone, address):
-    conn = sqlite3.connect(DB_NAME)
-    cursor = conn.cursor()
+        conn.close()
 
-    cursor.execute(
-        "INSERT INTO contacts (name, phone, address) VALUES (?, ?, ?)",
-        (name, phone, address)
-    )
+        return [Contact(*row) for row in rows]
 
-    conn.commit()
-    conn.close()
+    def add(self, contact: Contact):
+        conn = self._connect()
+        cursor = conn.cursor()
 
-def update_contact(contact_id, name, phone, address):
-    conn = sqlite3.connect(DB_NAME)
-    cursor = conn.cursor()
+        cursor.execute(
+            "INSERT INTO contacts (name, phone, address) VALUES (?, ?, ?)",
+            (contact.name, contact.phone, contact.address)
+        )
 
-    cursor.execute(
-        "UPDATE contacts SET name=?, phone=?, address=? WHERE id=?",
-        (name, phone, address, contact_id)
-    )
+        conn.commit()
+        conn.close()
 
-    conn.commit()
-    conn.close()
+    def update(self, contact: Contact):
+        conn = self._connect()
+        cursor = conn.cursor()
 
-def delete_contact(contact_id):
-    conn = sqlite3.connect(DB_NAME)
-    cursor = conn.cursor()
+        cursor.execute(
+            "UPDATE contacts SET name=?, phone=?, address=? WHERE id=?",
+            (contact.name, contact.phone, contact.address, contact.id)
+        )
 
-    cursor.execute("DELETE FROM contacts WHERE id=?", (contact_id,))
-    conn.commit()
-    conn.close()
+        conn.commit()
+        conn.close()
+
+    def delete(self, contact_id: int):
+        conn = self._connect()
+        cursor = conn.cursor()
+
+        cursor.execute("DELETE FROM contacts WHERE id=?", (contact_id,))
+        conn.commit()
+        conn.close()
