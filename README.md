@@ -158,6 +158,6 @@ Deletes a contact by ID.
 
 ## Author
 
-Your Name  
-Course Name  
-Semester  
+Larry Griffith, Jack Morris, Yahir Espinoza  
+CS 440 Software Architecture
+Spring 2026
