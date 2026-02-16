@@ -1,0 +1,41 @@
+@startuml
+
+title Sequence Diagram - Modify Contact
+
+actor User
+participant "Browser\n(HTML + JS)" as Browser
+participant "ContactHandler\n(HTTP Server)" as Server
+participant "ContactController" as Controller
+participant "ContactService" as Service
+participant "ContactRepository" as Repository
+database "SQLite\ncontacts.db" as DB
+
+User -> Browser : Edit fields inline\nClick "Save"
+Browser -> Server : PUT /api/contacts/{id}\n(JSON body)
+
+Server -> Controller : update_contact(id, body)
+Controller -> Service : modify_contact(id, data)
+Service -> Repository : update(Contact)
+
+Repository -> DB : UPDATE contacts\nSET name=?, phone=?, address=?\nWHERE id=?
+DB --> Repository : Success
+
+Repository --> Service
+Service --> Controller
+Controller --> Server
+
+Server --> Browser : HTTP 200 OK
+Browser -> Server : GET /api/contacts
+Server -> Controller : get_contacts()
+Controller -> Service : list_contacts()
+Service -> Repository : get_all()
+Repository -> DB : SELECT * FROM contacts
+DB --> Repository : Result rows
+Repository --> Service : list[Contact]
+Service --> Controller
+Controller --> Server : JSON
+
+Server --> Browser : Updated contact list
+Browser --> User : Display updated data
+
+@enduml

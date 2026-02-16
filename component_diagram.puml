@@ -1,0 +1,33 @@
+@startuml
+
+title Contact Manager - Component Diagram
+
+skinparam componentStyle rectangle
+
+actor User
+
+component "Web Browser" as Browser
+component "Frontend\n(HTML + JavaScript)" as Frontend
+component "HTTP Server\n(ContactHandler)" as Server
+component "Controller\n(ContactController)" as Controller
+component "Service Layer\n(ContactService)" as Service
+component "Repository Layer\n(ContactRepository)" as Repository
+database "SQLite Database\n(contacts.db)" as DB
+
+User --> Browser
+Browser --> Frontend : Loads UI
+Frontend --> Server : HTTP Requests (GET, POST, PUT, DELETE)
+
+Server --> Controller : Routes request
+Controller --> Service : Calls business logic
+Service --> Repository : Data operations
+Repository --> DB : SQL queries
+
+DB --> Repository : Query results
+Repository --> Service
+Service --> Controller
+Controller --> Server
+Server --> Frontend : JSON Response
+Frontend --> Browser : Render updates
+
+@enduml

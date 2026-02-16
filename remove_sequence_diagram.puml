@@ -1,0 +1,28 @@
+@startuml
+
+title Sequence Diagram - Remove Contact
+
+actor User
+participant "Browser\n(HTML + JS)" as Browser
+participant "ContactHandler\n(HTTP Server)" as Server
+participant "ContactController" as Controller
+participant "ContactService" as Service
+participant "ContactRepository" as Repository
+database "SQLite\ncontacts.db" as DB
+
+User -> Browser : Click "Delete"
+Browser -> Server : DELETE /api/contacts/{id}
+
+Server -> Controller : delete_contact(id)
+Controller -> Service : remove_contact(id)
+Service -> Repository : delete(id)
+Repository -> DB : DELETE FROM contacts WHERE id=?
+DB --> Repository : Success
+Repository --> Service
+Service --> Controller
+Controller --> Server
+
+Server --> Browser : HTTP 200 OK
+Browser --> User : Refresh contact list
+
+@enduml

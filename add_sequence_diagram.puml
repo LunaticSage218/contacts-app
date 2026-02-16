@@ -1,0 +1,28 @@
+@startuml
+
+title Sequence Diagram - Add Contact
+
+actor User
+participant "Browser\n(HTML + JS)" as Browser
+participant "ContactHandler\n(HTTP Server)" as Server
+participant "ContactController" as Controller
+participant "ContactService" as Service
+participant "ContactRepository" as Repository
+database "SQLite\ncontacts.db" as DB
+
+User -> Browser : Enter contact info\nClick "Add"
+Browser -> Server : POST /api/contacts\n(JSON body)
+
+Server -> Controller : create_contact(body)
+Controller -> Service : create_contact(data)
+Service -> Repository : add(Contact)
+Repository -> DB : INSERT INTO contacts
+DB --> Repository : Success
+Repository --> Service
+Service --> Controller
+Controller --> Server
+
+Server --> Browser : HTTP 201 Created
+Browser --> User : Refresh contact list
+
+@enduml

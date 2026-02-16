@@ -1,0 +1,32 @@
+@startuml
+
+title Contact Manager - Deployment Diagram
+
+node "User Device" {
+
+    node "Web Browser" {
+        artifact "index.html"
+        artifact "app.js"
+    }
+
+    node "Python Web Server\n(Process)" {
+
+        artifact "server.py"
+        artifact "controller.py"
+        artifact "service.py"
+        artifact "database.py"
+        artifact "models.py"
+
+    }
+
+    node "Local File System" {
+
+        database "contacts.db"
+
+    }
+}
+
+"Web Browser" --> "Python Web Server\n(Process)" : HTTP (localhost:8000)
+"Python Web Server\n(Process)" --> "contacts.db" : SQL (sqlite3)
+
+@enduml

@@ -1,0 +1,63 @@
+@startuml
+
+skinparam classAttributeIconSize 0
+
+title Contact Manager - UML Class Diagram
+
+class Contact {
+    - id: int
+    - name: String
+    - phone: String
+    - address: String
+    --
+    + to_dict(): dict
+}
+
+class ContactRepository {
+    - db_path: String
+    --
+    - _connect(): sqlite3.Connection
+    - _init_db(): void
+    + get_all(): List<Contact>
+    + add(contact: Contact): void
+    + update(contact: Contact): void
+    + delete(contact_id: int): void
+}
+
+class ContactService {
+    - repo: ContactRepository
+    --
+    + list_contacts(): List<Contact>
+    + create_contact(data: dict): void
+    + modify_contact(contact_id: int, data: dict): void
+    + remove_contact(contact_id: int): void
+}
+
+class ContactController {
+    - service: ContactService
+    --
+    + get_contacts(): bytes
+    + create_contact(body: bytes): void
+    + update_contact(contact_id: int, body: bytes): void
+    + delete_contact(contact_id: int): void
+}
+
+class ContactHandler {
+    + do_GET(): void
+    + do_POST(): void
+    + do_PUT(): void
+    + do_DELETE(): void
+}
+
+class SimpleHTTPRequestHandler
+
+' Relationships
+
+ContactRepository --> Contact : creates
+ContactService --> ContactRepository : uses
+ContactController --> ContactService : uses
+ContactHandler --> ContactController : uses
+
+ContactHandler --|> SimpleHTTPRequestHandler
+
+@enduml
