@@ -77,14 +77,12 @@ contacts-app/
 
 ## Technologies Used
 
-- Python 3
+- Python
 - Built-in `http.server`
 - SQLite (via `sqlite3`)
 - HTML
 - CSS
 - JavaScript (Fetch API)
-
-No external frameworks are used.
 
 ---
 
@@ -130,29 +128,6 @@ Updates an existing contact.
 
 DELETE `/api/contacts/{id}`  
 Deletes a contact by ID.
-
----
-
-## Design Goals
-
-- Client–server architecture  
-- Object-oriented backend design  
-- Clear separation of concerns  
-- Persistent data storage  
-- No rigid web frameworks  
-- Easily extendable architecture  
-
----
-
-## Possible Extensions
-
-- Authentication and user accounts  
-- Search and filtering  
-- Input validation layer  
-- Logging system  
-- Migration to PostgreSQL  
-- Docker containerization  
-- RESTful routing abstraction  
 
 ---
 
