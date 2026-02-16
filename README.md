@@ -91,7 +91,7 @@ contacts-app/
 Step 1: Clone the repository
 
 ```
-git clone <your-repository-url>
+git clone [<your-repository-url>](https://github.com/LunaticSage218/contacts-app)
 cd contacts-app
 ```
 
