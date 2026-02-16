@@ -131,7 +131,7 @@ Deletes a contact by ID.
 
 ---
 
-## Author
+## Authors
 
 Larry Griffith, Jack Morris, Yahir Espinoza  
 CS 440 Software Architecture
